@@ -1,0 +1,1141 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>No Sale. More Pay. — Försäljning utan att prata sälj</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    /* ===== RESET & BASE ===== */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --color-bg: #0D0D0D;
+      --color-bg-alt: #141414;
+      --color-bg-card: #1A1A1A;
+      --color-text: #F5F0EB;
+      --color-text-muted: #9A9590;
+      --color-accent: #C8A97E;
+      --color-accent-light: #E0CDB3;
+      --color-line: rgba(200, 169, 126, 0.15);
+      --font-display: 'Playfair Display', Georgia, serif;
+      --font-body: 'Inter', -apple-system, sans-serif;
+      --max-width: 1200px;
+      --section-pad: clamp(80px, 12vw, 160px);
+    }
+
+    html { scroll-behavior: smooth; font-size: 16px; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--color-bg);
+      color: var(--color-text);
+      line-height: 1.7;
+      font-weight: 300;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    ::selection { background: var(--color-accent); color: var(--color-bg); }
+
+    img { display: block; max-width: 100%; height: auto; }
+
+    a { color: var(--color-accent); text-decoration: none; transition: color 0.3s; }
+    a:hover { color: var(--color-accent-light); }
+
+    .container { max-width: var(--max-width); margin: 0 auto; padding: 0 clamp(24px, 5vw, 64px); }
+
+    /* ===== NAV ===== */
+    .nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      padding: 24px 0;
+      background: rgba(13,13,13,0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid transparent;
+      transition: all 0.4s ease;
+    }
+    .nav.scrolled { border-bottom-color: var(--color-line); padding: 16px 0; }
+
+    .nav .container {
+      display: flex; align-items: center; justify-content: space-between;
+    }
+
+    .nav-logo {
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: var(--color-text);
+    }
+    .nav-logo span { color: var(--color-accent); }
+
+    .nav-links { display: flex; gap: 36px; align-items: center; }
+    .nav-links a {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--color-text-muted);
+      font-weight: 400;
+      position: relative;
+    }
+    .nav-links a::after {
+      content: ''; position: absolute; bottom: -4px; left: 0;
+      width: 0; height: 1px; background: var(--color-accent);
+      transition: width 0.3s ease;
+    }
+    .nav-links a:hover { color: var(--color-text); }
+    .nav-links a:hover::after { width: 100%; }
+
+    .nav-cta {
+      padding: 10px 28px;
+      border: 1px solid var(--color-accent);
+      color: var(--color-accent) !important;
+      font-size: 0.75rem !important;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      transition: all 0.3s ease;
+    }
+    .nav-cta:hover { background: var(--color-accent); color: var(--color-bg) !important; }
+
+    /* Mobile nav */
+    .nav-toggle { display: none; background: none; border: none; cursor: pointer; padding: 8px; }
+    .nav-toggle span {
+      display: block; width: 24px; height: 1.5px; background: var(--color-text);
+      margin: 6px 0; transition: all 0.3s;
+    }
+
+    @media (max-width: 768px) {
+      .nav-toggle { display: block; }
+      .nav-links {
+        position: fixed; top: 0; right: -100%; width: 80vw; height: 100vh;
+        flex-direction: column; justify-content: center;
+        background: var(--color-bg); gap: 32px;
+        transition: right 0.4s ease; padding: 40px;
+      }
+      .nav-links.open { right: 0; }
+      .nav-links a { font-size: 1rem; }
+    }
+
+    /* ===== HERO ===== */
+    .hero {
+      min-height: 100vh;
+      display: flex; align-items: center;
+      position: relative;
+      padding-top: 100px;
+      overflow: hidden;
+    }
+
+    .hero-bg {
+      position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+      background: linear-gradient(160deg, rgba(200,169,126,0.06) 0%, transparent 50%);
+    }
+
+    .hero .container {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 80px;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-content {}
+
+    .hero-eyebrow {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: var(--color-accent);
+      margin-bottom: 24px;
+      font-weight: 500;
+    }
+
+    .hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2.8rem, 5.5vw, 4.5rem);
+      font-weight: 500;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      margin-bottom: 28px;
+    }
+    .hero h1 em {
+      font-style: italic;
+      color: var(--color-accent);
+    }
+
+    .hero-text {
+      font-size: 1.1rem;
+      color: var(--color-text-muted);
+      max-width: 480px;
+      margin-bottom: 48px;
+      line-height: 1.8;
+    }
+
+    .hero-actions { display: flex; gap: 20px; align-items: center; flex-wrap: wrap; }
+
+    .btn-primary {
+      display: inline-block;
+      padding: 16px 40px;
+      background: var(--color-accent);
+      color: var(--color-bg);
+      font-size: 0.8rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      border: none; cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .btn-primary:hover { background: var(--color-accent-light); color: var(--color-bg); }
+
+    .btn-secondary {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--color-text-muted);
+      transition: color 0.3s;
+    }
+    .btn-secondary:hover { color: var(--color-accent); }
+    .btn-secondary svg { transition: transform 0.3s; }
+    .btn-secondary:hover svg { transform: translateX(4px); }
+
+    .hero-image {
+      position: relative;
+    }
+    .hero-image img {
+      width: 100%;
+      height: 550px;
+      object-fit: cover;
+      filter: grayscale(15%);
+    }
+    .hero-image::before {
+      content: '';
+      position: absolute;
+      top: -20px; left: -20px;
+      width: 100%; height: 100%;
+      border: 1px solid var(--color-line);
+      z-index: -1;
+    }
+
+    @media (max-width: 900px) {
+      .hero .container { grid-template-columns: 1fr; gap: 48px; }
+      .hero-image { order: -1; }
+      .hero-image img { height: 400px; }
+    }
+
+    /* ===== SECTION SHARED ===== */
+    section { padding: var(--section-pad) 0; }
+
+    .section-eyebrow {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.25em;
+      color: var(--color-accent);
+      margin-bottom: 16px;
+      font-weight: 500;
+    }
+
+    .section-heading {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 500;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      margin-bottom: 20px;
+    }
+
+    .section-subtext {
+      font-size: 1rem;
+      color: var(--color-text-muted);
+      max-width: 560px;
+      line-height: 1.8;
+    }
+
+    .divider {
+      width: 60px; height: 1px; background: var(--color-accent);
+      margin: 40px 0;
+    }
+
+    /* ===== ABOUT / INTRO ===== */
+    .about { background: var(--color-bg-alt); }
+
+    .about .container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 100px;
+      align-items: center;
+    }
+
+    .about-image-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .about-image-grid img {
+      width: 100%;
+      height: 240px;
+      object-fit: cover;
+    }
+    .about-image-grid img:first-child {
+      grid-column: 1 / -1;
+      height: 280px;
+    }
+
+    .about-text .section-subtext { margin-bottom: 32px; }
+
+    .about-stats {
+      display: flex; gap: 48px; margin-top: 40px;
+      padding-top: 40px; border-top: 1px solid var(--color-line);
+    }
+    .about-stats .stat-number {
+      font-family: var(--font-display);
+      font-size: 2.4rem;
+      font-weight: 500;
+      color: var(--color-accent);
+    }
+    .about-stats .stat-label {
+      font-size: 0.8rem;
+      color: var(--color-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-top: 4px;
+    }
+
+    @media (max-width: 900px) {
+      .about .container { grid-template-columns: 1fr; gap: 48px; }
+    }
+
+    /* ===== PROBLEM ===== */
+    .problem {}
+
+    .problem-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+      margin-top: 60px;
+    }
+
+    .problem-card {
+      padding: 40px 32px;
+      background: var(--color-bg-card);
+      border: 1px solid var(--color-line);
+      transition: all 0.4s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .problem-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0;
+      width: 100%; height: 2px;
+      background: var(--color-accent);
+      transform: scaleX(0); transform-origin: left;
+      transition: transform 0.4s ease;
+    }
+    .problem-card:hover::before { transform: scaleX(1); }
+    .problem-card:hover { border-color: rgba(200,169,126,0.3); }
+
+    .problem-card .card-number {
+      font-family: var(--font-display);
+      font-size: 2.5rem;
+      color: rgba(200,169,126,0.15);
+      margin-bottom: 16px;
+      font-weight: 600;
+    }
+
+    .problem-card h3 {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      font-weight: 500;
+      margin-bottom: 12px;
+    }
+
+    .problem-card p {
+      font-size: 0.9rem;
+      color: var(--color-text-muted);
+      line-height: 1.7;
+    }
+
+    @media (max-width: 768px) {
+      .problem-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ===== METHOD ===== */
+    .method { background: var(--color-bg-alt); }
+
+    .method-layout {
+      display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 80px;
+      align-items: center;
+      margin-top: 60px;
+    }
+
+    .method-visual {
+      position: relative;
+    }
+    .method-visual img {
+      width: 100%;
+      height: 500px;
+      object-fit: cover;
+    }
+    .method-visual .float-card {
+      position: absolute;
+      bottom: -24px; right: -24px;
+      background: var(--color-accent);
+      color: var(--color-bg);
+      padding: 24px 32px;
+      max-width: 260px;
+    }
+    .float-card .card-quote {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 1rem;
+      line-height: 1.5;
+    }
+
+    .method-steps {}
+
+    .method-step {
+      padding: 28px 0;
+      border-bottom: 1px solid var(--color-line);
+      display: grid;
+      grid-template-columns: 48px 1fr;
+      gap: 20px;
+      align-items: start;
+    }
+    .method-step:first-child { padding-top: 0; }
+
+    .step-number {
+      font-family: var(--font-display);
+      font-size: 1.4rem;
+      color: var(--color-accent);
+      font-weight: 500;
+    }
+
+    .method-step h4 {
+      font-size: 1rem;
+      font-weight: 500;
+      margin-bottom: 6px;
+    }
+    .method-step p {
+      font-size: 0.88rem;
+      color: var(--color-text-muted);
+      line-height: 1.7;
+    }
+
+    @media (max-width: 900px) {
+      .method-layout { grid-template-columns: 1fr; gap: 48px; }
+    }
+
+    /* ===== MICROACTIONS ===== */
+    .micro {}
+
+    .micro-intro {
+      max-width: 640px;
+      margin-bottom: 60px;
+    }
+
+    .micro-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+    }
+
+    .micro-card {
+      padding: 36px;
+      background: var(--color-bg-card);
+      border: 1px solid var(--color-line);
+      display: flex; gap: 20px;
+      align-items: flex-start;
+      transition: all 0.3s;
+    }
+    .micro-card:hover { border-color: rgba(200,169,126,0.35); }
+
+    .micro-icon {
+      width: 40px; height: 40px; flex-shrink: 0;
+      border: 1px solid var(--color-accent);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--color-accent); font-size: 1rem;
+    }
+
+    .micro-card h4 {
+      font-size: 1rem;
+      font-weight: 500;
+      margin-bottom: 8px;
+    }
+    .micro-card p {
+      font-size: 0.88rem;
+      color: var(--color-text-muted);
+      line-height: 1.7;
+    }
+
+    @media (max-width: 768px) {
+      .micro-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ===== DIGITAL / PORTAL ===== */
+    .digital {
+      background: var(--color-bg-alt);
+      position: relative;
+      overflow: hidden;
+    }
+    .digital::before {
+      content: '';
+      position: absolute; top: 0; right: 0;
+      width: 40%; height: 100%;
+      background: linear-gradient(180deg, rgba(200,169,126,0.04) 0%, transparent 100%);
+    }
+
+    .digital .container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+      position: relative; z-index: 1;
+    }
+
+    .digital-content {}
+    .digital-content .section-subtext { margin-bottom: 36px; }
+
+    .digital-features {
+      display: flex; flex-direction: column; gap: 20px;
+      margin-top: 32px;
+    }
+
+    .feature-item {
+      display: flex; gap: 16px; align-items: flex-start;
+    }
+    .feature-dot {
+      width: 8px; height: 8px; background: var(--color-accent);
+      border-radius: 50%; flex-shrink: 0; margin-top: 8px;
+    }
+    .feature-item p { font-size: 0.92rem; color: var(--color-text-muted); }
+    .feature-item strong { color: var(--color-text); font-weight: 500; }
+
+    .digital-visual {
+      position: relative;
+    }
+    .digital-visual img {
+      width: 100%;
+      height: 480px;
+      object-fit: cover;
+    }
+
+    .portal-preview {
+      background: var(--color-bg);
+      border: 1px solid var(--color-line);
+      padding: 32px;
+      margin-top: 24px;
+    }
+    .portal-preview h4 {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--color-accent);
+      margin-bottom: 16px;
+    }
+    .portal-mock {
+      display: flex; flex-direction: column; gap: 12px;
+    }
+    .mock-bar {
+      height: 8px;
+      background: var(--color-line);
+      border-radius: 4px;
+    }
+    .mock-bar:nth-child(1) { width: 75%; }
+    .mock-bar:nth-child(2) { width: 60%; }
+    .mock-bar:nth-child(3) { width: 85%; }
+    .mock-progress {
+      margin-top: 12px; display: flex; align-items: center; gap: 12px;
+    }
+    .mock-progress-bar {
+      flex: 1; height: 4px; background: var(--color-line);
+      border-radius: 2px; overflow: hidden;
+    }
+    .mock-progress-fill {
+      width: 65%; height: 100%; background: var(--color-accent);
+      border-radius: 2px;
+    }
+    .mock-progress span {
+      font-size: 0.75rem; color: var(--color-accent);
+      white-space: nowrap;
+    }
+
+    @media (max-width: 900px) {
+      .digital .container { grid-template-columns: 1fr; gap: 48px; }
+    }
+
+    /* ===== TEAM ===== */
+    .team {}
+
+    .team-intro {
+      max-width: 560px;
+      margin-bottom: 60px;
+    }
+
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 48px;
+    }
+
+    .team-member {}
+
+    .team-member-image {
+      position: relative; margin-bottom: 24px;
+      overflow: hidden;
+    }
+    .team-member-image img {
+      width: 100%;
+      height: 500px;
+      object-fit: cover;
+      object-position: top;
+      transition: transform 0.6s ease;
+    }
+    .team-member:hover .team-member-image img { transform: scale(1.03); }
+
+    .team-member h3 {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+
+    .team-member .team-role {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--color-accent);
+      margin-bottom: 16px;
+    }
+
+    .team-member p {
+      font-size: 0.9rem;
+      color: var(--color-text-muted);
+      line-height: 1.7;
+    }
+
+    @media (max-width: 768px) {
+      .team-grid { grid-template-columns: 1fr; }
+      .team-member-image img { height: 400px; }
+    }
+
+    /* ===== GALLERY STRIP ===== */
+    .gallery-strip {
+      padding: 0;
+      display: flex;
+      gap: 4px;
+      overflow: hidden;
+    }
+    .gallery-strip img {
+      flex: 1;
+      height: 320px;
+      object-fit: cover;
+      filter: grayscale(30%);
+      transition: all 0.5s ease;
+    }
+    .gallery-strip img:hover { filter: grayscale(0); flex: 1.5; }
+
+    @media (max-width: 768px) {
+      .gallery-strip { flex-wrap: wrap; }
+      .gallery-strip img { flex: none; width: 50%; height: 200px; }
+    }
+
+    /* ===== CTA ===== */
+    .cta-section {
+      padding: var(--section-pad) 0;
+      text-align: center;
+      position: relative;
+    }
+    .cta-section::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at center, rgba(200,169,126,0.06) 0%, transparent 70%);
+    }
+
+    .cta-section .container { position: relative; z-index: 1; }
+
+    .cta-section .section-heading {
+      max-width: 700px;
+      margin: 0 auto 20px;
+    }
+    .cta-section .section-subtext {
+      max-width: 500px;
+      margin: 0 auto 40px;
+      text-align: center;
+    }
+
+    /* ===== FOOTER ===== */
+    .footer {
+      padding: 60px 0 40px;
+      border-top: 1px solid var(--color-line);
+    }
+
+    .footer .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 40px;
+    }
+
+    .footer-brand {}
+    .footer-brand .nav-logo { margin-bottom: 12px; }
+    .footer-brand p {
+      font-size: 0.85rem;
+      color: var(--color-text-muted);
+      max-width: 300px;
+      line-height: 1.6;
+    }
+
+    .footer-links { display: flex; gap: 60px; }
+
+    .footer-col h4 {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: var(--color-accent);
+      margin-bottom: 16px;
+    }
+    .footer-col a {
+      display: block;
+      font-size: 0.85rem;
+      color: var(--color-text-muted);
+      margin-bottom: 10px;
+    }
+    .footer-col a:hover { color: var(--color-text); }
+
+    .footer-bottom {
+      margin-top: 60px;
+      padding-top: 24px;
+      border-top: 1px solid var(--color-line);
+      display: flex; justify-content: space-between;
+      font-size: 0.78rem; color: var(--color-text-muted);
+    }
+
+    @media (max-width: 768px) {
+      .footer .container { flex-direction: column; }
+      .footer-bottom { flex-direction: column; gap: 8px; }
+    }
+
+    /* ===== ANIMATIONS ===== */
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ===== PARALLAX SHAPES ===== */
+    .shape {
+      position: absolute;
+      border: 1px solid var(--color-line);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .shape-1 { width: 300px; height: 300px; top: 20%; right: -100px; }
+    .shape-2 { width: 200px; height: 200px; bottom: 10%; left: -60px; }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="nav" id="nav">
+    <div class="container">
+      <a href="#" class="nav-logo">No Sale. <span>More Pay.</span></a>
+      <div class="nav-links" id="navLinks">
+        <a href="#about">Om oss</a>
+        <a href="#method">Metod</a>
+        <a href="#digital">Portalen</a>
+        <a href="#team">Teamet</a>
+        <a href="#contact" class="nav-cta">Kontakt</a>
+      </div>
+      <button class="nav-toggle" id="navToggle" aria-label="Meny">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero" id="hero">
+    <div class="hero-bg"></div>
+    <div class="container">
+      <div class="hero-content reveal">
+        <p class="hero-eyebrow">Relationsbaserad f&ouml;rs&auml;ljning</p>
+        <h1>Vi &ouml;kar f&ouml;rs&auml;ljningen&mdash;<br><em>utan att prata s&auml;lj</em></h1>
+        <p class="hero-text">
+          Genom relation, tillit och mod i vardagens kundm&ouml;ten skapar vi
+          f&ouml;rs&auml;ljning som en naturlig f&ouml;ljd &mdash; inte som en aktivitet i sig.
+        </p>
+        <div class="hero-actions">
+          <a href="#contact" class="btn-primary">Boka samtal</a>
+          <a href="#about" class="btn-secondary">
+            L&auml;s mer
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+        </div>
+      </div>
+      <div class="hero-image reveal">
+        <img src="images/BO4A7148.jpg" alt="Professionell konsultation" loading="eager">
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="about" id="about">
+    <div class="container">
+      <div class="about-image-grid reveal">
+        <img src="images/BO4A7343.jpg" alt="Teamsamarbete">
+        <img src="images/BO4A6308.jpg" alt="Konsultation">
+        <img src="images/BO4A7419.jpg" alt="Samtal">
+      </div>
+      <div class="about-text reveal">
+        <p class="section-eyebrow">Vad vi g&ouml;r</p>
+        <h2 class="section-heading">F&ouml;rs&auml;ljning genom relationer, inte retorik</h2>
+        <p class="section-subtext">
+          Vi hj&auml;lper f&ouml;retag &ouml;ka sin f&ouml;rs&auml;ljning utan att prata traditionell
+          f&ouml;rs&auml;ljning. De m&auml;nniskor vi arbetar med identifierar sig inte som s&auml;ljare
+          &mdash; de &auml;r konsulter, specialister, projektledare och tekniker som redan skapar
+          v&auml;rde hos kunden, men inte alltid f&aring;r betalt f&ouml;r det.
+        </p>
+        <p class="section-subtext" style="margin-top: 16px;">
+          Vi arbetar med hur relationer fungerar, hur tillit byggs i vardagliga m&ouml;ten
+          och hur mod skapar aff&auml;r. Resultatet? &Ouml;kad f&ouml;rs&auml;ljning &mdash; utan att
+          n&aring;gon k&auml;nner att de s&auml;ljer.
+        </p>
+        <div class="about-stats">
+          <div>
+            <div class="stat-number">100%</div>
+            <div class="stat-label">Relation f&ouml;rst</div>
+          </div>
+          <div>
+            <div class="stat-number">0</div>
+            <div class="stat-label">Pitchar</div>
+          </div>
+          <div>
+            <div class="stat-number">&infin;</div>
+            <div class="stat-label">Microhandlingar</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROBLEM -->
+  <section class="problem" id="problem">
+    <div class="container">
+      <div class="reveal">
+        <p class="section-eyebrow">Problemet</p>
+        <h2 class="section-heading">Varf&ouml;r aff&auml;rer g&aring;r f&ouml;rlorade</h2>
+        <p class="section-subtext">
+          I m&aring;nga organisationer ligger v&auml;rdet g&ouml;mt. Inte av ovilja &mdash;
+          utan av os&auml;kerhet, r&auml;dsla och okunskap.
+        </p>
+      </div>
+      <div class="problem-grid">
+        <div class="problem-card reveal">
+          <div class="card-number">01</div>
+          <h3>Ja f&ouml;r sent, nej f&ouml;r tidigt</h3>
+          <p>Medarbetare missar r&auml;tt timing i kunddialogen. Aff&auml;rsm&ouml;jligheter passerar outtalade och os&auml;kerhet tar &ouml;ver.</p>
+        </div>
+        <div class="problem-card reveal">
+          <div class="card-number">02</div>
+          <h3>Problem &auml;gs f&ouml;r lite</h3>
+          <p>N&auml;r problem uppst&aring;r hos kunden pekas de vidare ist&auml;llet f&ouml;r att &auml;gas. Det skapar distans och skadar tilliten.</p>
+        </div>
+        <div class="problem-card reveal">
+          <div class="card-number">03</div>
+          <h3>V&auml;rde f&ouml;rblir osynligt</h3>
+          <p>Medarbetare skapar enormt v&auml;rde men g&ouml;r det aldrig synligt. Kunden ser inte vad de f&aring;r &mdash; och ni f&aring;r inte betalt.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- METHOD -->
+  <section class="method" id="method">
+    <div class="container">
+      <div class="reveal">
+        <p class="section-eyebrow">V&aring;r metod</p>
+        <h2 class="section-heading">Sm&aring; beteendf&ouml;r&auml;ndringar.<br>Stor aff&auml;rseffekt.</h2>
+      </div>
+      <div class="method-layout">
+        <div class="method-visual reveal">
+          <img src="images/Utbildning fsg.jpg" alt="Workshop och utbildning">
+          <div class="float-card">
+            <p class="card-quote">&ldquo;Inspiration blir handling. Handling blir vana. Vana blir aff&auml;r.&rdquo;</p>
+          </div>
+        </div>
+        <div class="method-steps reveal">
+          <div class="method-step">
+            <span class="step-number">01</span>
+            <div>
+              <h4>S&auml;g ja ist&auml;llet f&ouml;r nej</h4>
+              <p>Vi tr&auml;nar medarbetare att se m&ouml;jligheter d&auml;r de tidigare avgr&auml;nsade sig. Att kliva in ist&auml;llet f&ouml;r att kliva bort.</p>
+            </div>
+          </div>
+          <div class="method-step">
+            <span class="step-number">02</span>
+            <div>
+              <h4>&Auml;g problemet</h4>
+              <p>Ist&auml;llet f&ouml;r att peka vidare tr&auml;nar vi att ta ansvar &mdash; &auml;ven n&auml;r det inte &auml;r &ldquo;mitt bord&rdquo;. Det bygger tillit och skapar aff&auml;r.</p>
+            </div>
+          </div>
+          <div class="method-step">
+            <span class="step-number">03</span>
+            <div>
+              <h4>Stanna i problemet</h4>
+              <p>L&auml;r dig att st&auml;lla en fr&aring;ga till, s&auml;ga &ldquo;hj&auml;lp mig f&ouml;rst&aring;&rdquo; ist&auml;llet f&ouml;r &ldquo;l&ouml;sningen &auml;r&rdquo;. Det skapar djupare relationer.</p>
+            </div>
+          </div>
+          <div class="method-step">
+            <span class="step-number">04</span>
+            <div>
+              <h4>G&ouml;r v&auml;rde synligt</h4>
+              <p>R&auml;tt timing, r&auml;tt ord. Vi hj&auml;lper medarbetare visa det v&auml;rde de redan skapar &mdash; i r&auml;tt &ouml;gonblick.</p>
+            </div>
+          </div>
+          <div class="method-step">
+            <span class="step-number">05</span>
+            <div>
+              <h4>Koppla in kollegor</h4>
+              <p>Att s&auml;lja sina kollegor &auml;r en naturlig f&ouml;rl&auml;ngning av att &auml;ga kundens problem. Det stärker b&aring;de relationen och aff&auml;ren.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MICROACTIONS -->
+  <section class="micro" id="micro">
+    <div class="container">
+      <div class="micro-intro reveal">
+        <p class="section-eyebrow">Microhandlingar</p>
+        <h2 class="section-heading">Konkreta beteenden du kan testa <em>idag</em></h2>
+        <p class="section-subtext">
+          Vi arbetar inte med teorier. Vi arbetar med microhandlingar &mdash; sm&aring;, konkreta
+          beteenden anpassade f&ouml;r verkliga kundm&ouml;ten som g&ouml;r skillnad direkt.
+        </p>
+      </div>
+      <div class="micro-grid">
+        <div class="micro-card reveal">
+          <div class="micro-icon">&rarr;</div>
+          <div>
+            <h4>St&auml;ll en fr&aring;ga till</h4>
+            <p>Innan du ger svaret &mdash; st&auml;ll en f&ouml;ljdfr&aring;ga. Det visar genuint intresse och f&ouml;rdjupar f&ouml;rst&aring;elsen f&ouml;r kundens verkliga behov.</p>
+          </div>
+        </div>
+        <div class="micro-card reveal">
+          <div class="micro-icon">&harr;</div>
+          <div>
+            <h4>&ldquo;Hj&auml;lp mig f&ouml;rst&aring;&rdquo;</h4>
+            <p>Byt &ldquo;l&ouml;sningen &auml;r&rdquo; mot &ldquo;hj&auml;lp mig f&ouml;rst&aring;&rdquo;. Sm&aring; ordval som radikalt f&ouml;r&auml;ndrar dynamiken i m&ouml;tet.</p>
+          </div>
+        </div>
+        <div class="micro-card reveal">
+          <div class="micro-icon">&check;</div>
+          <div>
+            <h4>Ta ansvar f&ouml;r n&auml;sta steg</h4>
+            <p>Avsluta varje kundm&ouml;te med att &auml;ga n&auml;sta steg. Det bygger f&ouml;rtroende och h&aring;ller relationen levande.</p>
+          </div>
+        </div>
+        <div class="micro-card reveal">
+          <div class="micro-icon">&plus;</div>
+          <div>
+            <h4>Koppla in r&auml;tt kollega</h4>
+            <p>N&auml;r du ser ett behov som en kollega kan l&ouml;sa &mdash; koppla in dem. Det visar att ni &auml;r ett team som br&aring;r om.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DIGITAL PORTAL -->
+  <section class="digital" id="digital">
+    <div class="container">
+      <div class="digital-content reveal">
+        <p class="section-eyebrow">Kundportalen</p>
+        <h2 class="section-heading">D&auml;r insikt blir vana &mdash; och vana blir aff&auml;r</h2>
+        <p class="section-subtext">
+          V&aring;ra f&ouml;rel&auml;sningar och workshops skapar insikt. V&aring;rt digitala verktyg
+          skapar f&ouml;r&auml;ndring. Kundportalen h&aring;ller beteenden levande &ouml;ver tid.
+        </p>
+        <div class="digital-features">
+          <div class="feature-item">
+            <div class="feature-dot"></div>
+            <p><strong>Veckovis microhandling</strong> &mdash; levereras direkt via mail och SMS med en klick till portalen</p>
+          </div>
+          <div class="feature-item">
+            <div class="feature-dot"></div>
+            <p><strong>Kort video &amp; inspiration</strong> &mdash; 2&ndash;4 minuters video f&ouml;r varje microhandling</p>
+          </div>
+          <div class="feature-item">
+            <div class="feature-dot"></div>
+            <p><strong>Check-in &amp; reflektion</strong> &mdash; logga hur ofta du testat och vad som h&auml;nde</p>
+          </div>
+          <div class="feature-item">
+            <div class="feature-dot"></div>
+            <p><strong>Bibliotek</strong> &mdash; utforska fler microhandlingar efter kategori och tema</p>
+          </div>
+          <div class="feature-item">
+            <div class="feature-dot"></div>
+            <p><strong>Kundanpassat</strong> &mdash; er logga, era bilder, er ton. Det k&auml;nns som ert verktyg.</p>
+          </div>
+        </div>
+      </div>
+      <div class="digital-visual reveal">
+        <img src="images/_N3A4296 kopiera.jpg" alt="Digital plattform">
+        <div class="portal-preview">
+          <h4>Veckans microhandling</h4>
+          <div class="portal-mock">
+            <div class="mock-bar"></div>
+            <div class="mock-bar"></div>
+            <div class="mock-bar"></div>
+          </div>
+          <div class="mock-progress">
+            <div class="mock-progress-bar"><div class="mock-progress-fill"></div></div>
+            <span>3/5 check-ins</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TEAM -->
+  <section class="team" id="team">
+    <div class="container">
+      <div class="team-intro reveal">
+        <p class="section-eyebrow">Teamet</p>
+        <h2 class="section-heading">M&auml;nniskorna bakom metoden</h2>
+        <p class="section-subtext">
+          Erfarenhet fr&aring;n entrepren&ouml;rskap, varum&auml;rkesstrategi, f&ouml;rs&auml;ljning
+          och beteendedesign &mdash; samlat i ett team.
+        </p>
+      </div>
+      <div class="team-grid">
+        <div class="team-member reveal">
+          <div class="team-member-image">
+            <img src="images/Miriam bl%C3%A5.jpg" alt="Miriam Tjärnström">
+          </div>
+          <h3>Miriam Tj&auml;rnstr&ouml;m</h3>
+          <p class="team-role">Grundare &amp; Strategisk r&aring;dgivare</p>
+          <p>
+            Seriell entrepren&ouml;r, styrelseproffs, f&ouml;rel&auml;sare och f&ouml;rfattare.
+            Grundare av Friendly Advice med djup expertis inom varum&auml;rkesstrategi,
+            tillv&auml;xt genom tydligt kundv&auml;rde och psykologiskt starka organisationer.
+          </p>
+        </div>
+        <div class="team-member reveal">
+          <div class="team-member-image">
+            <img src="images/Eric%20svartvit.jpg" alt="Eric Mannheimer">
+          </div>
+          <h3>Eric Mannheimer</h3>
+          <p class="team-role">Grundare &amp; Aff&auml;rsutveckling</p>
+          <p>
+            Entrepren&ouml;r med bakgrund fr&aring;n rekrytering, aff&auml;rsutveckling och
+            f&ouml;rs&auml;ljning. Grundare av Aliby och SEVR Group med gedigen erfarenhet
+            fr&aring;n att bygga team och skapa aff&auml;rsv&auml;rde.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GALLERY STRIP -->
+  <div class="gallery-strip">
+    <img src="images/BO4A6308.jpg" alt="Konsultation" loading="lazy">
+    <img src="images/BO4A7343.jpg" alt="Workshop" loading="lazy">
+    <img src="images/_N3A4266%20kopiera%20(003).jpg" alt="Portr&auml;tt" loading="lazy">
+    <img src="images/Eric%20p%C3%A5%20Sevr.JPG" alt="Eric" loading="lazy">
+  </div>
+
+  <!-- CTA -->
+  <section class="cta-section" id="contact">
+    <div class="container reveal">
+      <p class="section-eyebrow">Kom ig&aring;ng</p>
+      <h2 class="section-heading">&Ouml;ka er f&ouml;rs&auml;ljning &mdash;<br>utan att prata s&auml;lj</h2>
+      <p class="section-subtext">
+        Nyfiken p&aring; vad No Sale. More Pay. kan g&ouml;ra f&ouml;r er organisation?
+        L&aring;t oss prata.
+      </p>
+      <a href="mailto:miriam@friendlyadvice.se" class="btn-primary">Boka ett samtal</a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-brand">
+        <a href="#" class="nav-logo">No Sale. <span>More Pay.</span></a>
+        <p>Vi &ouml;kar bolags f&ouml;rs&auml;ljning utan att prata s&auml;lj &mdash; genom relation, tillit och mod.</p>
+      </div>
+      <div class="footer-links">
+        <div class="footer-col">
+          <h4>Navigation</h4>
+          <a href="#about">Om oss</a>
+          <a href="#method">Metod</a>
+          <a href="#micro">Microhandlingar</a>
+          <a href="#digital">Portalen</a>
+          <a href="#team">Teamet</a>
+        </div>
+        <div class="footer-col">
+          <h4>Kontakt</h4>
+          <a href="mailto:miriam@friendlyadvice.se">miriam@friendlyadvice.se</a>
+          <a href="tel:+46721733100">0721-733 100</a>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="footer-bottom">
+        <span>&copy; 2026 No Sale. More Pay. Alla r&auml;ttigheter f&ouml;rbeh&aring;llna.</span>
+        <span>En del av Friendly Advice</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Nav scroll effect
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 60);
+    });
+
+    // Mobile nav
+    const toggle = document.getElementById('navToggle');
+    const links = document.getElementById('navLinks');
+    toggle.addEventListener('click', () => links.classList.toggle('open'));
+    links.querySelectorAll('a').forEach(a => a.addEventListener('click', () => links.classList.remove('open')));
+
+    // Scroll reveal
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+    reveals.forEach(el => observer.observe(el));
+
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>
