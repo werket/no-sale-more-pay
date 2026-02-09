@@ -1,0 +1,1861 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kundportal — No Sale. More Pay.</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #0D0D0D;
+      --bg-alt: #141414;
+      --bg-card: #1A1A1A;
+      --bg-card-hover: #1F1F1F;
+      --bg-elevated: #222222;
+      --text: #F5F0EB;
+      --text-muted: #9A9590;
+      --text-dim: #6B6560;
+      --accent: #C8A97E;
+      --accent-light: #E0CDB3;
+      --accent-dim: rgba(200,169,126,0.15);
+      --accent-glow: rgba(200,169,126,0.08);
+      --line: rgba(200,169,126,0.12);
+      --success: #6ECB8B;
+      --success-dim: rgba(110,203,139,0.12);
+      --warning: #E8C468;
+      --font-display: 'Playfair Display', Georgia, serif;
+      --font-body: 'Inter', -apple-system, sans-serif;
+      --radius: 12px;
+      --radius-sm: 8px;
+      --radius-xs: 6px;
+      --shadow: 0 4px 24px rgba(0,0,0,0.3);
+      --shadow-lg: 0 12px 48px rgba(0,0,0,0.4);
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    html { scroll-behavior: smooth; font-size: 16px; }
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      font-weight: 300;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+    }
+    ::selection { background: var(--accent); color: var(--bg); }
+    img { display: block; max-width: 100%; }
+    a { color: var(--accent); text-decoration: none; }
+    button { font-family: var(--font-body); cursor: pointer; }
+    input, textarea, select { font-family: var(--font-body); }
+
+    /* ===== LOGIN SCREEN ===== */
+    .login-screen {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg);
+      position: relative;
+      overflow: hidden;
+    }
+    .login-screen::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 30% 20%, var(--accent-glow) 0%, transparent 60%),
+                  radial-gradient(ellipse at 70% 80%, rgba(200,169,126,0.04) 0%, transparent 50%);
+    }
+    .login-card {
+      position: relative; z-index: 1;
+      width: 100%; max-width: 420px;
+      padding: 48px 40px;
+      background: var(--bg-card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      text-align: center;
+      margin: 24px;
+    }
+    .login-logo {
+      font-family: var(--font-display);
+      font-size: 1.3rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+      letter-spacing: -0.02em;
+    }
+    .login-logo span { color: var(--accent); }
+    .login-subtitle {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-bottom: 40px;
+    }
+    .login-label {
+      display: block; text-align: left;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+    .login-input {
+      width: 100%;
+      padding: 14px 16px;
+      background: var(--bg);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xs);
+      color: var(--text);
+      font-size: 0.95rem;
+      outline: none;
+      transition: var(--transition);
+      margin-bottom: 24px;
+    }
+    .login-input:focus { border-color: var(--accent); }
+    .login-input::placeholder { color: var(--text-dim); }
+    .login-btn {
+      width: 100%;
+      padding: 14px;
+      background: var(--accent);
+      color: var(--bg);
+      border: none;
+      border-radius: var(--radius-xs);
+      font-size: 0.82rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      transition: var(--transition);
+    }
+    .login-btn:hover { background: var(--accent-light); }
+    .login-sent {
+      display: none;
+      padding: 20px;
+      background: var(--success-dim);
+      border: 1px solid rgba(110,203,139,0.25);
+      border-radius: var(--radius-xs);
+      margin-top: 16px;
+    }
+    .login-sent p { font-size: 0.88rem; color: var(--success); }
+    .login-divider {
+      display: flex; align-items: center; gap: 16px;
+      margin: 24px 0;
+      color: var(--text-dim); font-size: 0.75rem;
+    }
+    .login-divider::before, .login-divider::after {
+      content: ''; flex: 1; height: 1px; background: var(--line);
+    }
+    .login-demo-btn {
+      width: 100%;
+      padding: 12px;
+      background: transparent;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      border-radius: var(--radius-xs);
+      font-size: 0.78rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      transition: var(--transition);
+    }
+    .login-demo-btn:hover { background: var(--accent); color: var(--bg); }
+
+    /* ===== APP LAYOUT ===== */
+    .app { display: none; min-height: 100vh; }
+    .app.active { display: flex; }
+
+    /* Sidebar */
+    .sidebar {
+      width: 260px;
+      background: var(--bg-alt);
+      border-right: 1px solid var(--line);
+      padding: 32px 0;
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0; left: 0; bottom: 0;
+      z-index: 50;
+      transition: transform 0.3s ease;
+    }
+    .sidebar-header {
+      padding: 0 24px 32px;
+      border-bottom: 1px solid var(--line);
+    }
+    .sidebar-logo {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      margin-bottom: 4px;
+    }
+    .sidebar-logo span { color: var(--accent); }
+    .sidebar-tenant {
+      font-size: 0.72rem;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .sidebar-nav {
+      flex: 1;
+      padding: 24px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .sidebar-nav-label {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: var(--text-dim);
+      padding: 16px 12px 8px;
+      font-weight: 500;
+    }
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 11px 12px;
+      border-radius: var(--radius-sm);
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      font-weight: 400;
+      transition: var(--transition);
+      border: none;
+      background: none;
+      width: 100%;
+      text-align: left;
+    }
+    .nav-item:hover { color: var(--text); background: var(--accent-dim); }
+    .nav-item.active {
+      color: var(--accent);
+      background: var(--accent-dim);
+      font-weight: 500;
+    }
+    .nav-item svg { width: 18px; height: 18px; flex-shrink: 0; opacity: 0.7; }
+    .nav-item.active svg { opacity: 1; }
+    .nav-badge {
+      margin-left: auto;
+      background: var(--accent);
+      color: var(--bg);
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 10px;
+    }
+
+    .sidebar-footer {
+      padding: 20px 24px;
+      border-top: 1px solid var(--line);
+    }
+    .sidebar-user {
+      display: flex; align-items: center; gap: 12px;
+    }
+    .user-avatar {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: var(--accent-dim);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.8rem; font-weight: 600;
+      color: var(--accent);
+    }
+    .user-info {}
+    .user-name { font-size: 0.85rem; font-weight: 500; }
+    .user-email { font-size: 0.72rem; color: var(--text-dim); }
+
+    /* Main Content */
+    .main {
+      flex: 1;
+      margin-left: 260px;
+      min-height: 100vh;
+    }
+
+    /* Top bar */
+    .topbar {
+      padding: 20px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--line);
+      background: rgba(13,13,13,0.8);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      position: sticky; top: 0; z-index: 40;
+    }
+    .topbar-title {
+      font-family: var(--font-display);
+      font-size: 1.3rem;
+      font-weight: 500;
+    }
+    .topbar-actions { display: flex; gap: 12px; align-items: center; }
+    .topbar-btn {
+      padding: 8px 12px;
+      background: none;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xs);
+      color: var(--text-muted);
+      font-size: 0.78rem;
+      transition: var(--transition);
+      display: flex; align-items: center; gap: 6px;
+    }
+    .topbar-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+    .mobile-menu-btn {
+      display: none;
+      background: none; border: none;
+      color: var(--text); padding: 8px;
+    }
+    .mobile-menu-btn svg { width: 24px; height: 24px; }
+
+    /* Content area */
+    .content { padding: 40px; }
+
+    /* Page views */
+    .page { display: none; }
+    .page.active { display: block; }
+
+    /* ===== DASHBOARD ===== */
+    .dash-greeting {
+      margin-bottom: 8px;
+    }
+    .dash-greeting h2 {
+      font-family: var(--font-display);
+      font-size: clamp(1.6rem, 3vw, 2rem);
+      font-weight: 500;
+    }
+    .dash-greeting h2 em { font-style: italic; color: var(--accent); }
+    .dash-greeting-sub {
+      font-size: 0.92rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .dash-program-card {
+      margin-top: 32px;
+      padding: 28px 32px;
+      background: linear-gradient(135deg, var(--bg-card) 0%, rgba(200,169,126,0.06) 100%);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 24px; flex-wrap: wrap;
+    }
+    .dash-program-info {}
+    .dash-program-label {
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: var(--accent);
+      margin-bottom: 4px;
+      font-weight: 500;
+    }
+    .dash-program-name {
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      font-weight: 500;
+    }
+    .dash-program-meta {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+    .dash-program-progress {
+      text-align: right;
+    }
+    .progress-ring-container {
+      display: flex; align-items: center; gap: 16px;
+    }
+    .progress-ring { width: 56px; height: 56px; transform: rotate(-90deg); }
+    .progress-ring-bg { fill: none; stroke: var(--line); stroke-width: 4; }
+    .progress-ring-fill {
+      fill: none; stroke: var(--accent); stroke-width: 4;
+      stroke-linecap: round;
+      stroke-dasharray: 150.8;
+      stroke-dashoffset: 52.8;
+      transition: stroke-dashoffset 0.6s ease;
+    }
+    .progress-text-block {}
+    .progress-number {
+      font-family: var(--font-display);
+      font-size: 1.6rem;
+      font-weight: 500;
+      color: var(--accent);
+    }
+    .progress-label {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    /* Weekly CTA card */
+    .dash-weekly-card {
+      margin-top: 32px;
+      padding: 0;
+      background: var(--bg-card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      transition: var(--transition);
+      cursor: pointer;
+    }
+    .dash-weekly-card:hover { border-color: rgba(200,169,126,0.35); }
+
+    .dash-weekly-visual {
+      background: linear-gradient(135deg, rgba(200,169,126,0.12), rgba(200,169,126,0.04));
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      position: relative;
+    }
+    .weekly-week-label {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.25em;
+      color: var(--accent);
+      margin-bottom: 16px;
+      font-weight: 500;
+    }
+    .weekly-icon-circle {
+      width: 80px; height: 80px;
+      border: 2px solid var(--accent);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 20px;
+    }
+    .weekly-icon-circle svg { width: 32px; height: 32px; color: var(--accent); }
+    .weekly-title-visual {
+      font-family: var(--font-display);
+      font-size: 1.3rem;
+      font-weight: 500;
+      line-height: 1.3;
+    }
+
+    .dash-weekly-content {
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .dash-weekly-eyebrow {
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: var(--accent);
+      margin-bottom: 12px;
+      font-weight: 500;
+    }
+    .dash-weekly-desc {
+      font-size: 0.92rem;
+      color: var(--text-muted);
+      line-height: 1.7;
+      margin-bottom: 24px;
+    }
+    .dash-weekly-stats {
+      display: flex; gap: 32px; margin-bottom: 24px;
+    }
+    .weekly-stat {}
+    .weekly-stat-val {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 500;
+      color: var(--text);
+    }
+    .weekly-stat-label {
+      font-size: 0.7rem;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+    .dash-weekly-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 28px;
+      background: var(--accent);
+      color: var(--bg);
+      border: none;
+      border-radius: var(--radius-xs);
+      font-size: 0.78rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      transition: var(--transition);
+      align-self: flex-start;
+    }
+    .dash-weekly-btn:hover { background: var(--accent-light); }
+    .dash-weekly-btn svg { width: 14px; height: 14px; }
+
+    /* Stats row */
+    .dash-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-top: 32px;
+    }
+    .stat-card {
+      padding: 24px;
+      background: var(--bg-card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+    }
+    .stat-card-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--text-dim);
+      margin-bottom: 8px;
+    }
+    .stat-card-value {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      font-weight: 500;
+      color: var(--text);
+    }
+    .stat-card-trend {
+      font-size: 0.78rem;
+      color: var(--success);
+      margin-top: 4px;
+    }
+
+    /* Recent activity */
+    .dash-recent {
+      margin-top: 40px;
+    }
+    .dash-recent h3 {
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      font-weight: 500;
+      margin-bottom: 20px;
+    }
+    .activity-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .activity-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px 20px;
+      background: var(--bg-card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      transition: var(--transition);
+    }
+    .activity-item:hover { border-color: rgba(200,169,126,0.25); }
+    .activity-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+      flex-shrink: 0;
+    }
+    .activity-text { flex: 1; }
+    .activity-title { font-size: 0.88rem; font-weight: 400; }
+    .activity-meta { font-size: 0.75rem; color: var(--text-dim); margin-top: 2px; }
+    .activity-count {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      color: var(--accent);
+    }
+
+    /* ===== WEEKLY / FOCUS VIEW ===== */
+    .focus-header {
+      margin-bottom: 32px;
+    }
+    .focus-breadcrumb {
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      margin-bottom: 8px;
+    }
+    .focus-breadcrumb a { color: var(--text-muted); }
+    .focus-breadcrumb a:hover { color: var(--accent); }
+
+    .focus-week-tag {
+      display: inline-block;
+      padding: 4px 14px;
+      background: var(--accent-dim);
+      border: 1px solid rgba(200,169,126,0.2);
+      border-radius: 20px;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--accent);
+      font-weight: 500;
+      margin-bottom: 12px;
+    }
+    .focus-title {
+      font-family: var(--font-display);
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      font-weight: 500;
+      margin-bottom: 8px;
+    }
+    .focus-subtitle {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      max-width: 600px;
+      line-height: 1.7;
+    }
+
+    /* Video */
+    .focus-video {
+      margin-top: 32px;
+      background: var(--bg-card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .video-placeholder {
+      width: 100%;
+      aspect-ratio: 16/9;
+      background: linear-gradient(135deg, var(--bg-elevated) 0%, var(--bg-card) 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .video-placeholder:hover { background: linear-gradient(135deg, var(--bg-card) 0%, rgba(200,169,126,0.05) 100%); }
+    .play-btn {
+      width: 72px; height: 72px;
+      border: 2px solid var(--accent);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      transition: var(--transition);
+    }
+    .video-placeholder:hover .play-btn {
+      background: var(--accent);
+    }
+    .play-btn svg { width: 28px; height: 28px; color: var(--accent); margin-left: 4px; }
+    .video-placeholder:hover .play-btn svg { color: var(--bg); }
+    .video-duration {
+      font-size: 0.78rem;
+      color: var(--text-dim);
+    }
+
+    /* Instructions */
+    .focus-body {
+      display: grid;
+      grid-template-columns: 1.3fr 1fr;
+      gap: 32px;
+      margin-top: 32px;
+    }
+
+    .focus-instructions {
+      background: var(--bg-card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 32px;
+    }
+    .focus-instructions h3 {
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      font-weight: 500;
+      margin-bottom: 20px;
+    }
+    .instruction-text {
+      font-size: 0.92rem;
+      color: var(--text-muted);
+      line-height: 1.8;
+      margin-bottom: 24px;
+    }
+    .think-about {
+      padding: 20px 24px;
+      background: var(--accent-glow);
+      border-left: 3px solid var(--accent);
+      border-radius: 0 var(--radius-xs) var(--radius-xs) 0;
+    }
+    .think-about h4 {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--accent);
+      margin-bottom: 12px;
+      font-weight: 600;
+    }
+    .think-about ul {
+      list-style: none;
+      display: flex; flex-direction: column; gap: 8px;
+    }
+    .think-about li {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      padding-left: 20px;
+      position: relative;
+    }
+    .think-about li::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 8px;
+      width: 6px; height: 6px;
+      background: var(--accent);
+      border-radius: 50%;
+    }
+
+    /* Check-in */
+    .focus-checkin {
+      background: var(--bg-card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 32px;
+    }
+    .focus-checkin h3 {
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      font-weight: 500;
+      margin-bottom: 6px;
+    }
+    .checkin-sub {
+      font-size: 0.82rem;
+      color: var(--text-dim);
+      margin-bottom: 28px;
+    }
+
+    .stepper {
+      margin-bottom: 24px;
+    }
+    .stepper-label {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      font-weight: 500;
+    }
+    .stepper-control {
+      display: flex; align-items: center; gap: 0;
+    }
+    .stepper-btn {
+      width: 44px; height: 44px;
+      background: var(--bg);
+      border: 1px solid var(--line);
+      color: var(--accent);
+      font-size: 1.2rem;
+      display: flex; align-items: center; justify-content: center;
+      transition: var(--transition);
+    }
+    .stepper-btn:first-child { border-radius: var(--radius-xs) 0 0 var(--radius-xs); }
+    .stepper-btn:last-child { border-radius: 0 var(--radius-xs) var(--radius-xs) 0; }
+    .stepper-btn:hover { background: var(--accent-dim); }
+    .stepper-value {
+      width: 64px; height: 44px;
+      background: var(--bg);
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-display);
+      font-size: 1.3rem;
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    .checkin-textarea {
+      width: 100%;
+      min-height: 100px;
+      padding: 14px 16px;
+      background: var(--bg);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xs);
+      color: var(--text);
+      font-size: 0.88rem;
+      line-height: 1.6;
+      resize: vertical;
+      outline: none;
+      transition: var(--transition);
+      margin-bottom: 8px;
+    }
+    .checkin-textarea:focus { border-color: var(--accent); }
+    .checkin-textarea::placeholder { color: var(--text-dim); }
+    .textarea-label {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+      font-weight: 500;
+      display: block;
+    }
+
+    /* Impact selector */
+    .impact-selector {
+      margin-bottom: 24px;
+    }
+    .impact-options {
+      display: flex; gap: 8px; flex-wrap: wrap;
+    }
+    .impact-option {
+      padding: 8px 16px;
+      background: var(--bg);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      transition: var(--transition);
+    }
+    .impact-option:hover, .impact-option.selected {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: var(--accent-dim);
+    }
+
+    .checkin-submit {
+      width: 100%;
+      padding: 14px;
+      background: var(--accent);
+      color: var(--bg);
+      border: none;
+      border-radius: var(--radius-xs);
+      font-size: 0.82rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      transition: var(--transition);
+      margin-top: 8px;
+    }
+    .checkin-submit:hover { background: var(--accent-light); }
+
+    .checkin-success {
+      display: none;
+      text-align: center;
+      padding: 32px 24px;
+    }
+    .checkin-success .success-icon {
+      width: 56px; height: 56px;
+      border-radius: 50%;
+      background: var(--success-dim);
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 16px;
+    }
+    .checkin-success .success-icon svg { width: 24px; height: 24px; color: var(--success); }
+    .checkin-success h4 {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      margin-bottom: 6px;
+    }
+    .checkin-success p { font-size: 0.85rem; color: var(--text-muted); }
+
+    /* History */
+    .focus-history {
+      margin-top: 32px;
+      grid-column: 1 / -1;
+    }
+    .focus-history h3 {
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      font-weight: 500;
+      margin-bottom: 16px;
+    }
+    .history-timeline {
+      display: flex; flex-direction: column; gap: 8px;
+    }
+    .history-item {
+      display: flex; align-items: flex-start; gap: 16px;
+      padding: 16px 20px;
+      background: var(--bg-card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+    }
+    .history-date {
+      font-size: 0.78rem;
+      color: var(--text-dim);
+      min-width: 80px;
+      padding-top: 2px;
+    }
+    .history-content { flex: 1; }
+    .history-count {
+      font-size: 0.88rem;
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+    .history-reflection {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      font-style: italic;
+    }
+
+    /* ===== LIBRARY ===== */
+    .library-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 32px;
+      flex-wrap: wrap;
+    }
+    .library-header h2 {
+      font-family: var(--font-display);
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      font-weight: 500;
+    }
+    .library-header p {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .library-filters {
+      display: flex; gap: 8px; flex-wrap: wrap;
+    }
+    .filter-btn {
+      padding: 8px 20px;
+      background: var(--bg-card);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      color: var(--text-muted);
+      font-size: 0.78rem;
+      transition: var(--transition);
+    }
+    .filter-btn:hover, .filter-btn.active {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: var(--accent-dim);
+    }
+
+    .library-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 20px;
+    }
+
+    .library-card {
+      background: var(--bg-card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 28px;
+      transition: var(--transition);
+      cursor: pointer;
+      position: relative;
+    }
+    .library-card:hover { border-color: rgba(200,169,126,0.35); transform: translateY(-2px); }
+
+    .library-card-tag {
+      display: inline-block;
+      padding: 3px 10px;
+      background: var(--accent-dim);
+      border-radius: 4px;
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--accent);
+      font-weight: 500;
+      margin-bottom: 14px;
+    }
+    .library-card h4 {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 500;
+      margin-bottom: 8px;
+      line-height: 1.3;
+    }
+    .library-card p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+    .library-card-footer {
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .library-card-video {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 0.75rem;
+      color: var(--text-dim);
+    }
+    .library-card-video svg { width: 14px; height: 14px; }
+    .library-card-fav {
+      background: none; border: none;
+      color: var(--text-dim);
+      transition: var(--transition);
+      padding: 4px;
+    }
+    .library-card-fav:hover, .library-card-fav.active { color: var(--accent); }
+    .library-card-fav svg { width: 18px; height: 18px; }
+
+    /* ===== LOG ===== */
+    .log-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 32px;
+      flex-wrap: wrap;
+    }
+    .log-header h2 {
+      font-family: var(--font-display);
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      font-weight: 500;
+    }
+    .log-header p {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .log-summary {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+    .log-stat {
+      padding: 20px;
+      background: var(--bg-card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      text-align: center;
+    }
+    .log-stat-val {
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      font-weight: 500;
+      color: var(--accent);
+    }
+    .log-stat-label {
+      font-size: 0.7rem;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-top: 4px;
+    }
+
+    .log-week-group {
+      margin-bottom: 32px;
+    }
+    .log-week-header {
+      display: flex; align-items: center; gap: 12px;
+      margin-bottom: 12px;
+    }
+    .log-week-badge {
+      padding: 4px 12px;
+      background: var(--accent-dim);
+      border-radius: 4px;
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--accent);
+      font-weight: 500;
+    }
+    .log-week-date {
+      font-size: 0.78rem;
+      color: var(--text-dim);
+    }
+
+    .log-entries {
+      display: flex; flex-direction: column; gap: 8px;
+    }
+    .log-entry {
+      padding: 20px 24px;
+      background: var(--bg-card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 16px;
+      align-items: center;
+    }
+    .log-entry-title {
+      font-size: 0.92rem;
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+    .log-entry-reflection {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      font-style: italic;
+    }
+    .log-entry-meta {
+      text-align: right;
+    }
+    .log-entry-count {
+      font-family: var(--font-display);
+      font-size: 1.4rem;
+      color: var(--accent);
+    }
+    .log-entry-date {
+      font-size: 0.72rem;
+      color: var(--text-dim);
+    }
+
+    /* ===== MOBILE RESPONSIVE ===== */
+    @media (max-width: 900px) {
+      .sidebar { transform: translateX(-100%); }
+      .sidebar.open { transform: translateX(0); }
+      .main { margin-left: 0; }
+      .mobile-menu-btn { display: block; }
+      .content { padding: 24px; }
+      .focus-body { grid-template-columns: 1fr; }
+      .dash-weekly-card { grid-template-columns: 1fr; }
+      .dash-stats { grid-template-columns: 1fr; }
+      .log-summary { grid-template-columns: repeat(2, 1fr); }
+      .dash-program-card { flex-direction: column; text-align: center; }
+      .dash-program-progress { text-align: center; }
+      .progress-ring-container { justify-content: center; }
+    }
+
+    /* Overlay for mobile */
+    .sidebar-overlay {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.6);
+      z-index: 45;
+    }
+    .sidebar-overlay.active { display: block; }
+
+    /* ===== TRANSITIONS ===== */
+    .fade-in {
+      animation: fadeIn 0.4s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Toast notification */
+    .toast {
+      position: fixed;
+      bottom: 32px;
+      right: 32px;
+      padding: 16px 24px;
+      background: var(--bg-card);
+      border: 1px solid var(--success);
+      border-radius: var(--radius-sm);
+      box-shadow: var(--shadow-lg);
+      display: flex; align-items: center; gap: 12px;
+      z-index: 200;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.4s ease;
+    }
+    .toast.show { transform: translateY(0); opacity: 1; }
+    .toast-icon { color: var(--success); }
+    .toast-icon svg { width: 20px; height: 20px; }
+    .toast-text { font-size: 0.88rem; }
+  </style>
+</head>
+<body>
+
+  <!-- ===== LOGIN SCREEN ===== -->
+  <div class="login-screen" id="loginScreen">
+    <div class="login-card">
+      <div class="login-logo">No Sale. <span>More Pay.</span></div>
+      <p class="login-subtitle">Logga in i kundportalen</p>
+
+      <div id="loginForm">
+        <label class="login-label">E-postadress</label>
+        <input type="email" class="login-input" id="loginEmail" placeholder="namn@foretag.se">
+        <button class="login-btn" onclick="sendMagicLink()">Skicka inloggningslänk</button>
+      </div>
+
+      <div class="login-sent" id="loginSent">
+        <p>Vi har skickat en inloggningslänk till din e-post. Klicka på länken för att logga in.</p>
+      </div>
+
+      <div class="login-divider">eller</div>
+      <button class="login-demo-btn" onclick="enterPortal()">Visa demo</button>
+    </div>
+  </div>
+
+  <!-- ===== APP ===== -->
+  <div class="app" id="app">
+
+    <!-- Sidebar overlay (mobile) -->
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-logo">No Sale. <span>More Pay.</span></div>
+        <div class="sidebar-tenant">Acme Consulting AB</div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="sidebar-nav-label">Portalen</div>
+        <button class="nav-item active" onclick="showPage('dashboard', this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+          Dashboard
+        </button>
+        <button class="nav-item" onclick="showPage('weekly', this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          Veckans uppgift
+          <span class="nav-badge">Ny</span>
+        </button>
+        <button class="nav-item" onclick="showPage('library', this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+          Bibliotek
+        </button>
+        <button class="nav-item" onclick="showPage('log', this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          Min logg
+        </button>
+
+        <div class="sidebar-nav-label" style="margin-top: 12px">Övrigt</div>
+        <button class="nav-item" onclick="window.location.href='index.html'">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15,3 21,3 21,9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          Hemsidan
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="sidebar-user">
+          <div class="user-avatar">AJ</div>
+          <div class="user-info">
+            <div class="user-name">Anna Johansson</div>
+            <div class="user-email">anna@acme.se</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main area -->
+    <div class="main">
+      <!-- Top bar -->
+      <div class="topbar">
+        <div style="display:flex;align-items:center;gap:16px">
+          <button class="mobile-menu-btn" onclick="toggleSidebar()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          </button>
+          <span class="topbar-title" id="topbarTitle">Dashboard</span>
+        </div>
+        <div class="topbar-actions">
+          <button class="topbar-btn" onclick="showPage('weekly', document.querySelectorAll('.nav-item')[1])">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+            Veckans uppgift
+          </button>
+        </div>
+      </div>
+
+      <div class="content">
+
+        <!-- ===== DASHBOARD PAGE ===== -->
+        <div class="page active fade-in" id="page-dashboard">
+          <div class="dash-greeting">
+            <h2>Välkommen tillbaka, <em>Anna</em></h2>
+            <p class="dash-greeting-sub">Vecka 7 — Relationsbaserad försäljning, Acme Consulting</p>
+          </div>
+
+          <div class="dash-program-card">
+            <div class="dash-program-info">
+              <div class="dash-program-label">Ert program</div>
+              <div class="dash-program-name">Relationsbaserad försäljning</div>
+              <div class="dash-program-meta">Startdatum: 13 jan 2026 · 24 veckor · Fokus: Tillit & Mod</div>
+            </div>
+            <div class="dash-program-progress">
+              <div class="progress-ring-container">
+                <svg class="progress-ring" viewBox="0 0 56 56">
+                  <circle class="progress-ring-bg" cx="28" cy="28" r="24"/>
+                  <circle class="progress-ring-fill" cx="28" cy="28" r="24"/>
+                </svg>
+                <div class="progress-text-block">
+                  <div class="progress-number">65%</div>
+                  <div class="progress-label">Avklarat</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Weekly CTA -->
+          <div class="dash-weekly-card" onclick="showPage('weekly', document.querySelectorAll('.nav-item')[1])">
+            <div class="dash-weekly-visual">
+              <div class="weekly-week-label">Vecka 7</div>
+              <div class="weekly-icon-circle">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+              </div>
+              <div class="weekly-title-visual">Ställ en fråga till</div>
+            </div>
+            <div class="dash-weekly-content">
+              <div class="dash-weekly-eyebrow">Veckans microhandling</div>
+              <p class="dash-weekly-desc">
+                Innan du ger svaret — ställ en följdfråga. Det visar genuint intresse
+                och fördjupar förståelsen för kundens verkliga behov.
+              </p>
+              <div class="dash-weekly-stats">
+                <div class="weekly-stat">
+                  <div class="weekly-stat-val">3</div>
+                  <div class="weekly-stat-label">Check-ins</div>
+                </div>
+                <div class="weekly-stat">
+                  <div class="weekly-stat-val">5</div>
+                  <div class="weekly-stat-label">Mål</div>
+                </div>
+              </div>
+              <button class="dash-weekly-btn">
+                Öppna
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Stats -->
+          <div class="dash-stats">
+            <div class="stat-card">
+              <div class="stat-card-label">Totala check-ins</div>
+              <div class="stat-card-value">27</div>
+              <div class="stat-card-trend">+5 denna vecka</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-card-label">Microhandlingar testade</div>
+              <div class="stat-card-value">8</div>
+              <div class="stat-card-trend">av 12 tillgängliga</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-card-label">Aktiv streak</div>
+              <div class="stat-card-value">4v</div>
+              <div class="stat-card-trend">Bra jobbat!</div>
+            </div>
+          </div>
+
+          <!-- Recent -->
+          <div class="dash-recent">
+            <h3>Senaste aktivitet</h3>
+            <div class="activity-list">
+              <div class="activity-item">
+                <div class="activity-dot"></div>
+                <div class="activity-text">
+                  <div class="activity-title">Ställ en fråga till</div>
+                  <div class="activity-meta">Idag, 14:30</div>
+                </div>
+                <div class="activity-count">×2</div>
+              </div>
+              <div class="activity-item">
+                <div class="activity-dot" style="background: var(--success)"></div>
+                <div class="activity-text">
+                  <div class="activity-title">Ta ansvar för nästa steg</div>
+                  <div class="activity-meta">Igår, 09:15</div>
+                </div>
+                <div class="activity-count">×3</div>
+              </div>
+              <div class="activity-item">
+                <div class="activity-dot"></div>
+                <div class="activity-text">
+                  <div class="activity-title">"Hjälp mig förstå"</div>
+                  <div class="activity-meta">Mån 3 feb, 16:00</div>
+                </div>
+                <div class="activity-count">×1</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== WEEKLY / FOCUS PAGE ===== -->
+        <div class="page" id="page-weekly">
+          <div class="focus-header fade-in">
+            <div class="focus-breadcrumb">
+              <a href="#" onclick="showPage('dashboard', document.querySelectorAll('.nav-item')[0]); return false;">Dashboard</a> / Veckans microhandling
+            </div>
+            <span class="focus-week-tag">Vecka 7 · 3 feb – 9 feb</span>
+            <h2 class="focus-title">Ställ en fråga till</h2>
+            <p class="focus-subtitle">
+              Innan du ger svaret — ställ en följdfråga. Det visar genuint intresse
+              och fördjupar förståelsen för kundens verkliga behov.
+            </p>
+          </div>
+
+          <!-- Video -->
+          <div class="focus-video fade-in">
+            <div class="video-placeholder" onclick="this.innerHTML='<div style=\'width:100%;aspect-ratio:16/9;background:#000;display:flex;align-items:center;justify-content:center;color:var(--text-dim);font-size:0.9rem\'>Video spelas upp…</div>'">
+              <div class="play-btn">
+                <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
+              </div>
+              <span class="video-duration">3:24 min — Inspiration & exempel</span>
+            </div>
+          </div>
+
+          <!-- Instructions + Check-in -->
+          <div class="focus-body">
+            <div class="focus-instructions fade-in">
+              <h3>Gör så här</h3>
+              <p class="instruction-text">
+                Nästa gång du är i ett kundmöte och känner att du vet svaret — håll tillbaka.
+                Ställ istället en följdfråga: "Kan du berätta mer?", "Vad menar du med det?"
+                eller "Hur påverkar det er i vardagen?"
+              </p>
+              <p class="instruction-text">
+                Det handlar inte om att inte hjälpa — utan om att förstå bättre innan du hjälper.
+                Du kommer märka att kunden öppnar sig mer, och att din lösning träffar bättre.
+              </p>
+              <div class="think-about">
+                <h4>Tänk på</h4>
+                <ul>
+                  <li>Låt det bli tyst en stund — det är ok</li>
+                  <li>Ställ öppna frågor, inte ledande</li>
+                  <li>Lyssna på svaret, inte bara på orden</li>
+                  <li>Du behöver inte lösa allt direkt</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="focus-checkin fade-in">
+              <h3>Checka in</h3>
+              <p class="checkin-sub">Har du testat den här veckan? Logga din insats.</p>
+
+              <div id="checkinForm">
+                <div class="stepper">
+                  <div class="stepper-label">Antal gånger</div>
+                  <div class="stepper-control">
+                    <button class="stepper-btn" onclick="stepCount(-1)">−</button>
+                    <div class="stepper-value" id="stepperVal">1</div>
+                    <button class="stepper-btn" onclick="stepCount(1)">+</button>
+                  </div>
+                </div>
+
+                <div class="impact-selector">
+                  <div class="stepper-label">Hur kändes det?</div>
+                  <div class="impact-options">
+                    <button class="impact-option" onclick="selectImpact(this)">Bra</button>
+                    <button class="impact-option" onclick="selectImpact(this)">Utmanande</button>
+                    <button class="impact-option" onclick="selectImpact(this)">Oväntat</button>
+                    <button class="impact-option" onclick="selectImpact(this)">Naturligt</button>
+                  </div>
+                </div>
+
+                <label class="textarea-label">Reflektion (valfritt)</label>
+                <textarea class="checkin-textarea" placeholder="Vad hände? Hur reagerade kunden? Vad lärde du dig?"></textarea>
+
+                <button class="checkin-submit" onclick="submitCheckin()">Spara check-in</button>
+              </div>
+
+              <div class="checkin-success" id="checkinSuccess">
+                <div class="success-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20,6 9,17 4,12"/></svg>
+                </div>
+                <h4>Snyggt jobbat!</h4>
+                <p>Din check-in är sparad. Fortsätt testa under veckan.</p>
+              </div>
+            </div>
+
+            <!-- History for this microaction -->
+            <div class="focus-history fade-in">
+              <h3>Din historik för denna microhandling</h3>
+              <div class="history-timeline">
+                <div class="history-item">
+                  <div class="history-date">7 feb</div>
+                  <div class="history-content">
+                    <div class="history-count">2 gånger</div>
+                    <div class="history-reflection">"Ställde en följdfråga i mötet med Kund X. Kunden berättade om ett helt nytt behov som vi inte kände till."</div>
+                  </div>
+                </div>
+                <div class="history-item">
+                  <div class="history-date">5 feb</div>
+                  <div class="history-content">
+                    <div class="history-count">1 gång</div>
+                    <div class="history-reflection">"Testade med en befintlig kund. Kändes ovant men bra."</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== LIBRARY PAGE ===== -->
+        <div class="page" id="page-library">
+          <div class="library-header fade-in">
+            <div>
+              <h2>Bibliotek</h2>
+              <p>Utforska alla microhandlingar. Hitta inspiration utöver veckans uppgift.</p>
+            </div>
+          </div>
+
+          <div class="library-filters fade-in" style="margin-bottom: 24px;">
+            <button class="filter-btn active" onclick="filterLibrary('alla', this)">Alla</button>
+            <button class="filter-btn" onclick="filterLibrary('tillit', this)">Tillit</button>
+            <button class="filter-btn" onclick="filterLibrary('mod', this)">Mod</button>
+            <button class="filter-btn" onclick="filterLibrary('ansvar', this)">Ansvar</button>
+            <button class="filter-btn" onclick="filterLibrary('relation', this)">Relation</button>
+          </div>
+
+          <div class="library-grid fade-in">
+            <div class="library-card" data-cat="tillit" onclick="showPage('weekly', document.querySelectorAll('.nav-item')[1])">
+              <div class="library-card-tag">Tillit</div>
+              <h4>Ställ en fråga till</h4>
+              <p>Innan du ger svaret — ställ en följdfråga. Det visar genuint intresse och fördjupar förståelsen.</p>
+              <div class="library-card-footer">
+                <div class="library-card-video">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5,3 19,12 5,21"/></svg>
+                  3:24
+                </div>
+                <button class="library-card-fav active" onclick="event.stopPropagation(); this.classList.toggle('active')">
+                  <svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+                </button>
+              </div>
+            </div>
+
+            <div class="library-card" data-cat="ansvar">
+              <div class="library-card-tag">Ansvar</div>
+              <h4>Ta ansvar för nästa steg</h4>
+              <p>Avsluta varje kundmöte med att äga nästa steg. Det bygger förtroende och håller relationen levande.</p>
+              <div class="library-card-footer">
+                <div class="library-card-video">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5,3 19,12 5,21"/></svg>
+                  2:48
+                </div>
+                <button class="library-card-fav" onclick="event.stopPropagation(); this.classList.toggle('active')">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+                </button>
+              </div>
+            </div>
+
+            <div class="library-card" data-cat="tillit">
+              <div class="library-card-tag">Tillit</div>
+              <h4>"Hjälp mig förstå"</h4>
+              <p>Byt "lösningen är" mot "hjälp mig förstå". Små ordval som radikalt förändrar dynamiken i mötet.</p>
+              <div class="library-card-footer">
+                <div class="library-card-video">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5,3 19,12 5,21"/></svg>
+                  4:12
+                </div>
+                <button class="library-card-fav" onclick="event.stopPropagation(); this.classList.toggle('active')">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+                </button>
+              </div>
+            </div>
+
+            <div class="library-card" data-cat="mod">
+              <div class="library-card-tag">Mod</div>
+              <h4>Äg problemet</h4>
+              <p>Istället för att peka vidare — ta ansvar. Även när det inte är "mitt bord". Det bygger tillit och skapar affär.</p>
+              <div class="library-card-footer">
+                <div class="library-card-video">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5,3 19,12 5,21"/></svg>
+                  3:05
+                </div>
+                <button class="library-card-fav" onclick="event.stopPropagation(); this.classList.toggle('active')">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+                </button>
+              </div>
+            </div>
+
+            <div class="library-card" data-cat="relation">
+              <div class="library-card-tag">Relation</div>
+              <h4>Koppla in rätt kollega</h4>
+              <p>När du ser ett behov som en kollega kan lösa — koppla in dem. Det visar att ni är ett team som bryr sig.</p>
+              <div class="library-card-footer">
+                <div class="library-card-video">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5,3 19,12 5,21"/></svg>
+                  2:30
+                </div>
+                <button class="library-card-fav" onclick="event.stopPropagation(); this.classList.toggle('active')">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+                </button>
+              </div>
+            </div>
+
+            <div class="library-card" data-cat="mod">
+              <div class="library-card-tag">Mod</div>
+              <h4>Gör värde synligt</h4>
+              <p>Rätt timing, rätt ord. Visa det värde du redan skapar — i rätt ögonblick, på rätt sätt.</p>
+              <div class="library-card-footer">
+                <div class="library-card-video">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5,3 19,12 5,21"/></svg>
+                  3:55
+                </div>
+                <button class="library-card-fav" onclick="event.stopPropagation(); this.classList.toggle('active')">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+                </button>
+              </div>
+            </div>
+
+            <div class="library-card" data-cat="ansvar">
+              <div class="library-card-tag">Ansvar</div>
+              <h4>Stanna kvar lite längre</h4>
+              <p>Istället för att rusa vidare till nästa ämne — stanna i kundens problem. Det skapar djup.</p>
+              <div class="library-card-footer">
+                <div class="library-card-video">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5,3 19,12 5,21"/></svg>
+                  2:15
+                </div>
+                <button class="library-card-fav" onclick="event.stopPropagation(); this.classList.toggle('active')">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+                </button>
+              </div>
+            </div>
+
+            <div class="library-card" data-cat="relation">
+              <div class="library-card-tag">Relation</div>
+              <h4>Namnge värdet du ger</h4>
+              <p>Säg högt vad du gör och varför. "Jag tar det här vidare för att…" — det gör osynligt arbete synligt.</p>
+              <div class="library-card-footer">
+                <div class="library-card-video">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5,3 19,12 5,21"/></svg>
+                  3:40
+                </div>
+                <button class="library-card-fav" onclick="event.stopPropagation(); this.classList.toggle('active')">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== LOG PAGE ===== -->
+        <div class="page" id="page-log">
+          <div class="log-header fade-in">
+            <div>
+              <h2>Min logg</h2>
+              <p>Alla dina check-ins och reflektioner — samlat på ett ställe.</p>
+            </div>
+          </div>
+
+          <div class="log-summary fade-in">
+            <div class="log-stat">
+              <div class="log-stat-val">27</div>
+              <div class="log-stat-label">Check-ins</div>
+            </div>
+            <div class="log-stat">
+              <div class="log-stat-val">8</div>
+              <div class="log-stat-label">Microhandlingar</div>
+            </div>
+            <div class="log-stat">
+              <div class="log-stat-val">4</div>
+              <div class="log-stat-label">Veckor i rad</div>
+            </div>
+            <div class="log-stat">
+              <div class="log-stat-val">15</div>
+              <div class="log-stat-label">Reflektioner</div>
+            </div>
+          </div>
+
+          <!-- Week 7 -->
+          <div class="log-week-group fade-in">
+            <div class="log-week-header">
+              <span class="log-week-badge">Vecka 7</span>
+              <span class="log-week-date">3 feb – 9 feb 2026</span>
+            </div>
+            <div class="log-entries">
+              <div class="log-entry">
+                <div>
+                  <div class="log-entry-title">Ställ en fråga till</div>
+                  <div class="log-entry-reflection">"Ställde en följdfråga i mötet med Kund X. Kunden berättade om ett helt nytt behov."</div>
+                </div>
+                <div class="log-entry-meta">
+                  <div class="log-entry-count">×2</div>
+                  <div class="log-entry-date">7 feb</div>
+                </div>
+              </div>
+              <div class="log-entry">
+                <div>
+                  <div class="log-entry-title">Ställ en fråga till</div>
+                  <div class="log-entry-reflection">"Testade med en befintlig kund. Kändes ovant men bra."</div>
+                </div>
+                <div class="log-entry-meta">
+                  <div class="log-entry-count">×1</div>
+                  <div class="log-entry-date">5 feb</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Week 6 -->
+          <div class="log-week-group fade-in">
+            <div class="log-week-header">
+              <span class="log-week-badge">Vecka 6</span>
+              <span class="log-week-date">27 jan – 2 feb 2026</span>
+            </div>
+            <div class="log-entries">
+              <div class="log-entry">
+                <div>
+                  <div class="log-entry-title">Ta ansvar för nästa steg</div>
+                  <div class="log-entry-reflection">"Avslutade tre möten med att ta ägarskap på follow-up. Kände mig mer proffsig."</div>
+                </div>
+                <div class="log-entry-meta">
+                  <div class="log-entry-count">×3</div>
+                  <div class="log-entry-date">31 jan</div>
+                </div>
+              </div>
+              <div class="log-entry">
+                <div>
+                  <div class="log-entry-title">Ta ansvar för nästa steg</div>
+                  <div class="log-entry-reflection">"Glömde nästan men fixade det i mail efteråt."</div>
+                </div>
+                <div class="log-entry-meta">
+                  <div class="log-entry-count">×2</div>
+                  <div class="log-entry-date">29 jan</div>
+                </div>
+              </div>
+              <div class="log-entry">
+                <div>
+                  <div class="log-entry-title">Ta ansvar för nästa steg</div>
+                </div>
+                <div class="log-entry-meta">
+                  <div class="log-entry-count">×1</div>
+                  <div class="log-entry-date">28 jan</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Week 5 -->
+          <div class="log-week-group fade-in">
+            <div class="log-week-header">
+              <span class="log-week-badge">Vecka 5</span>
+              <span class="log-week-date">20 jan – 26 jan 2026</span>
+            </div>
+            <div class="log-entries">
+              <div class="log-entry">
+                <div>
+                  <div class="log-entry-title">"Hjälp mig förstå"</div>
+                  <div class="log-entry-reflection">"Sa 'hjälp mig förstå' i en tuff diskussion. Det lugnade ner hela situationen."</div>
+                </div>
+                <div class="log-entry-meta">
+                  <div class="log-entry-count">×4</div>
+                  <div class="log-entry-date">24 jan</div>
+                </div>
+              </div>
+              <div class="log-entry">
+                <div>
+                  <div class="log-entry-title">"Hjälp mig förstå"</div>
+                  <div class="log-entry-reflection">"Testade i internmöte först — funkade lika bra."</div>
+                </div>
+                <div class="log-entry-meta">
+                  <div class="log-entry-count">×2</div>
+                  <div class="log-entry-date">22 jan</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Week 4 -->
+          <div class="log-week-group fade-in">
+            <div class="log-week-header">
+              <span class="log-week-badge">Vecka 4</span>
+              <span class="log-week-date">13 jan – 19 jan 2026</span>
+            </div>
+            <div class="log-entries">
+              <div class="log-entry">
+                <div>
+                  <div class="log-entry-title">Äg problemet</div>
+                  <div class="log-entry-reflection">"En kund hade ett problem som inte var mitt ansvar. Tog det ändå. Resulterade i en ny dialog."</div>
+                </div>
+                <div class="log-entry-meta">
+                  <div class="log-entry-count">×3</div>
+                  <div class="log-entry-date">17 jan</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /content -->
+    </div><!-- /main -->
+  </div><!-- /app -->
+
+  <!-- Toast -->
+  <div class="toast" id="toast">
+    <div class="toast-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20,6 9,17 4,12"/></svg>
+    </div>
+    <span class="toast-text" id="toastText">Check-in sparad!</span>
+  </div>
+
+  <script>
+    // Page titles
+    const pageTitles = {
+      dashboard: 'Dashboard',
+      weekly: 'Veckans microhandling',
+      library: 'Bibliotek',
+      log: 'Min logg'
+    };
+
+    // Show page
+    function showPage(pageId, navBtn) {
+      // Hide all pages
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      // Show target
+      const page = document.getElementById('page-' + pageId);
+      if (page) {
+        page.classList.add('active');
+        page.classList.remove('fade-in');
+        void page.offsetWidth; // trigger reflow
+        page.classList.add('fade-in');
+      }
+
+      // Update nav
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+      if (navBtn) navBtn.classList.add('active');
+
+      // Update topbar
+      document.getElementById('topbarTitle').textContent = pageTitles[pageId] || '';
+
+      // Close mobile sidebar
+      document.getElementById('sidebar').classList.remove('open');
+      document.getElementById('sidebarOverlay').classList.remove('active');
+
+      // Scroll to top
+      window.scrollTo(0, 0);
+    }
+
+    // Toggle sidebar (mobile)
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('open');
+      document.getElementById('sidebarOverlay').classList.toggle('active');
+    }
+
+    // Login
+    function sendMagicLink() {
+      const email = document.getElementById('loginEmail').value;
+      if (email) {
+        document.getElementById('loginForm').style.display = 'none';
+        document.getElementById('loginSent').style.display = 'block';
+      }
+    }
+
+    function enterPortal() {
+      document.getElementById('loginScreen').style.display = 'none';
+      document.getElementById('app').classList.add('active');
+    }
+
+    // Stepper
+    let stepperCount = 1;
+    function stepCount(delta) {
+      stepperCount = Math.max(1, Math.min(10, stepperCount + delta));
+      document.getElementById('stepperVal').textContent = stepperCount;
+    }
+
+    // Impact
+    function selectImpact(btn) {
+      document.querySelectorAll('.impact-option').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+    }
+
+    // Check-in
+    function submitCheckin() {
+      document.getElementById('checkinForm').style.display = 'none';
+      document.getElementById('checkinSuccess').style.display = 'block';
+      showToast('Check-in sparad — bra jobbat!');
+    }
+
+    // Toast
+    function showToast(text) {
+      const toast = document.getElementById('toast');
+      document.getElementById('toastText').textContent = text;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 3500);
+    }
+
+    // Library filter
+    function filterLibrary(cat, btn) {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      document.querySelectorAll('.library-card').forEach(card => {
+        if (cat === 'alla' || card.dataset.cat === cat) {
+          card.style.display = 'block';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+
+    // Keyboard shortcut: Enter on login
+    document.getElementById('loginEmail').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') sendMagicLink();
+    });
+  </script>
+</body>
+</html>
